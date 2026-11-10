@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "create-admin": "node scripts/create-admin.js",
     "seed-brands": "node scripts/seed-international-brands.js",
     "seed-products": "node scripts/seed-real-products.js"
