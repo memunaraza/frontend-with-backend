@@ -1,15 +1,10 @@
-function formatPrice(price, currency) {
-  if (typeof price !== 'number' || !Number.isFinite(price)) return 'Check brand for price'
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: currency || 'USD',
-    maximumFractionDigits: 2,
-  }).format(price)
-}
+import { formatPKR } from '../utils/currency.js'
+import productCategories from '../data/product-categories.js'
 
 export default function ProductCard({ product, onAdd, onOpenDetails, adding }) {
   const hasPrice = typeof product.price === 'number' && Number.isFinite(product.price)
   const canAddToBag = hasPrice || !product.productUrl
+  const categoryLabel = productCategories.find((category) => category.value === product.category)?.label
 
   return (
     <article className="product-card">
@@ -27,6 +22,7 @@ export default function ProductCard({ product, onAdd, onOpenDetails, adding }) {
             loading="lazy"
           />
         </button>
+        {categoryLabel && <span className="product-card-category">{categoryLabel}</span>}
         {canAddToBag ? (
           <button
             className="quick-add"
@@ -53,9 +49,9 @@ export default function ProductCard({ product, onAdd, onOpenDetails, adding }) {
           <p>{product.desc}</p>
         </div>
         <div className="product-price">
-          <span>{hasPrice ? formatPrice(product.price, product.currency) : 'Price on request'}</span>
+          <span>{hasPrice ? formatPKR(product.price, product.currency) : 'Price on request'}</span>
           {product.productUrl && (
-            <a href={product.productUrl} target="_blank" rel="noreferrer">Check brand price</a>
+            <a href={product.productUrl} target="_blank" rel="noreferrer">View original listing</a>
           )}
         </div>
       </div>

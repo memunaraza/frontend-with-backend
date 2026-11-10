@@ -1,10 +1,9 @@
-function formatPrice(price, currency) {
-  if (typeof price !== 'number' || !Number.isFinite(price)) return 'Price on request'
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: currency || 'USD',
-    maximumFractionDigits: 2,
-  }).format(price)
+import productCategories from '../data/product-categories.js'
+import { formatPKR } from '../utils/currency.js'
+import { ProductDetailSkeleton } from './LoadingSkeletons.jsx'
+
+const collectionLabels = {
+  ...Object.fromEntries(productCategories.map(({ value, label }) => [value, label])),
 }
 
 export default function ProductDetail({
@@ -16,7 +15,7 @@ export default function ProductDetail({
   adding,
 }) {
   if (loading) {
-    return <section className="product-detail-state" aria-live="polite">Loading product details…</section>
+    return <ProductDetailSkeleton />
   }
 
   if (error || !product) {
@@ -46,8 +45,11 @@ export default function ProductDetail({
             <p className="eyebrow product-detail-brand">{product.brand.name}</p>
           )}
           <h1 id="product-detail-title">{product.name}</h1>
+          <p className="product-detail-category">
+            {collectionLabels[product.category || 'home'] || 'Home & living'}
+          </p>
           {product.brand?.country && <p className="product-detail-origin">{product.brand.country}</p>}
-          <p className="product-detail-price">{formatPrice(product.price, product.currency)}</p>
+          <p className="product-detail-price">{formatPKR(product.price, product.currency)}</p>
           <p className="product-detail-description">{product.desc}</p>
           <button
             className="button button-dark product-detail-add"

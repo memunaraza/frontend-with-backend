@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import productCategories from "../constants/product-categories.js"
 
 const productSchema= new mongoose.Schema({
     image:{
@@ -13,6 +14,12 @@ const productSchema= new mongoose.Schema({
         type: String,
         required:true
     },
+    category: {
+        type: String,
+        enum: productCategories,
+        default: "home",
+        index: true
+    },
     brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "brand"
@@ -23,8 +30,8 @@ const productSchema= new mongoose.Schema({
     },
     currency: {
         type: String,
-        enum: ["USD", "EUR"],
-        default: "USD"
+        enum: ["PKR"],
+        default: "PKR"
     },
     productUrl: {
         type: String,

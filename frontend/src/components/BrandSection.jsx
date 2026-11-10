@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from '../services/api.js'
+import ConfirmDialog from './ConfirmDialog.jsx'
+import { BrandGridSkeleton } from './LoadingSkeletons.jsx'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : 'Something went wrong. Please try again.'
@@ -19,6 +21,7 @@ export default function BrandSection({ isAdmin }) {
   const [imageUrl, setImageUrl] = useState('')
   const [imageAlt, setImageAlt] = useState('')
   const [imageSource, setImageSource] = useState('')
+  const [confirmation, setConfirmation] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -87,9 +90,7 @@ export default function BrandSection({ isAdmin }) {
     }
   }
 
-  async function handleDelete(brand) {
-    if (!window.confirm(`Delete “${brand.name}”? This cannot be undone.`)) return
-
+  async function deleteBrand(brand) {
     setError('')
     setSuccess('')
     try {
@@ -102,9 +103,7 @@ export default function BrandSection({ isAdmin }) {
     }
   }
 
-  async function handleDeleteAll() {
-    if (!window.confirm('Delete every brand? This cannot be undone. Products and user accounts will not be deleted.')) return
-
+  async function deleteAllBrands() {
     setError('')
     setSuccess('')
     try {
@@ -117,7 +116,32 @@ export default function BrandSection({ isAdmin }) {
     }
   }
 
+  function handleDelete(brand) {
+    setConfirmation({
+      title: `Delete ${brand.name}?`,
+      message: 'This action cannot be undone.',
+      confirmLabel: 'Delete brand',
+      onConfirm: async () => {
+        await deleteBrand(brand)
+        setConfirmation(null)
+      },
+    })
+  }
+
+  function handleDeleteAll() {
+    setConfirmation({
+      title: 'Delete every brand?',
+      message: 'This cannot be undone. Products and user accounts will not be deleted.',
+      confirmLabel: 'Delete all brands',
+      onConfirm: async () => {
+        await deleteAllBrands()
+        setConfirmation(null)
+      },
+    })
+  }
+
   return (
+    <>
     <section className="brand-section" id="brands">
       <div className="section-heading">
         <div>
@@ -229,7 +253,7 @@ export default function BrandSection({ isAdmin }) {
       )}
 
       {!isAdmin && error && <p className="form-error" role="alert">{error}</p>}
-      {loading && <div className="collection-state">Loading brands…</div>}
+      {loading && <BrandGridSkeleton />}
       {!loading && !error && brands.length === 0 && (
         <div className="collection-state">The brand directory is taking shape. Check back soon.</div>
       )}
@@ -266,5 +290,16 @@ export default function BrandSection({ isAdmin }) {
         </>
       )}
     </section>
+    {confirmation && (
+      <ConfirmDialog
+        title={confirmation.title}
+        message={confirmation.message}
+        confirmLabel={confirmation.confirmLabel}
+        destructive
+        onConfirm={confirmation.onConfirm}
+        onCancel={() => setConfirmation(null)}
+      />
+    )}
+    </>
   )
 }

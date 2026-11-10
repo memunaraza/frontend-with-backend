@@ -38,6 +38,33 @@ const brands = [
         imageUrl: "https://cdn.occtoo-media.com/4d81f22f-2795-41f2-b8bf-15e9abf03890/414c7326-bf6e-519e-a4dd-9b83f6c0d375/Coltre-3-seater-config-3-ecriture-240-muuto-5000x5000-hi-res.webp?format=medium",
         imageAlt: "Muuto Coltre three-seat sofa in a product studio",
         imageSource: "https://www.muuto.com/"
+    },
+    {
+        name: "Allbirds",
+        description: "American footwear and apparel brand known for everyday essentials made with natural and responsibly sourced materials.",
+        country: "United States",
+        website: "https://www.allbirds.com/",
+        imageUrl: "https://www.allbirds.com/cdn/shop/files/logo-seo.jpg?v=1753720776",
+        imageAlt: "Allbirds official brand mark",
+        imageSource: "https://www.allbirds.com/pages/our-story"
+    },
+    {
+        name: "Kotn",
+        description: "Toronto-based apparel brand creating everyday essentials with responsibly sourced Egyptian cotton.",
+        country: "Canada",
+        website: "https://kotn.com/",
+        imageUrl: "https://cdn.shopify.com/s/files/1/0932/1356/files/WOMENS_CARGO_POCKET_PANT_CHARCOAL_01.jpg?v=1793818955",
+        imageAlt: "Women's charcoal cotton cargo pants from Kotn",
+        imageSource: "https://kotn.com/products/womens-pocket-cargo-pants-in-charcoal"
+    },
+    {
+        name: "tentree",
+        description: "Canadian apparel brand making outdoor-inspired clothing with lower-impact materials.",
+        country: "Canada",
+        website: "https://www.tentree.com/",
+        imageUrl: "https://cdn.shopify.com/s/files/1/2341/3995/files/Black-Printed-Graphic-TreeBlend-T-Shirt-TCM6279-5724_5.jpg?v=1769732044",
+        imageAlt: "Northern Aurora graphic T-shirt from tentree",
+        imageSource: "https://www.tentree.com/products/northern-aurora-t-shirt-meteorite-black-aurora-treeline"
     }
 ]
 

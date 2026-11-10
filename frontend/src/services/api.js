@@ -61,6 +61,18 @@ export const api = {
   }),
   removeCartItem: (productId) => request(`/api/cart/items/${productId}`, { method: 'DELETE' }),
   clearCart: () => request('/api/cart', { method: 'DELETE' }),
+  createOrder: (shippingAddress) => request('/api/order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ shippingAddress }),
+  }),
+  getOrders: () => request('/api/order'),
+  sendContactMessage: (details) => request('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(details),
+  }),
+  getContactMessages: () => request('/api/contact'),
   createProduct: (formData) => request('/api/product/create', {
     method: 'POST',
     body: formData,

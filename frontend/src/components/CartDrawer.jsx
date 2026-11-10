@@ -1,11 +1,5 @@
-function formatPrice(price, currency) {
-  if (typeof price !== 'number' || !Number.isFinite(price)) return ''
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: currency || 'USD',
-    maximumFractionDigits: 2,
-  }).format(price)
-}
+import { formatPKR, toPKR } from '../utils/currency.js'
+import { CartSkeleton } from './LoadingSkeletons.jsx'
 
 export default function CartDrawer({
   cart,
@@ -21,13 +15,10 @@ export default function CartDrawer({
   requiresAuth,
 }) {
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0)
-  const totalsByCurrency = cart.reduce((totals, item) => {
+  const subtotal = cart.reduce((total, item) => {
     const product = item.product
-    if (typeof product?.price !== 'number' || !Number.isFinite(product.price)) return totals
-    const currency = product.currency || 'USD'
-    totals[currency] = (totals[currency] || 0) + product.price * item.quantity
-    return totals
-  }, {})
+    return total + (toPKR(product?.price, product?.currency) ?? 0) * item.quantity
+  }, 0)
 
   return (
     <div className="drawer-backdrop" onMouseDown={(event) => {
@@ -54,7 +45,7 @@ export default function CartDrawer({
           </div>
         </div>
 
-        {loading && <p className="drawer-message">Opening your bag…</p>}
+        {loading && <CartSkeleton count={1} />}
         {error && (
           <div className="drawer-message">
             <p className="form-error" role="alert">{error}</p>
@@ -109,22 +100,18 @@ export default function CartDrawer({
                     </button>
                   </div>
                   {typeof item.product.price === 'number' && (
-                    <span>{formatPrice(item.product.price * item.quantity, item.product.currency)}</span>
+                    <span>{formatPKR(item.product.price * item.quantity, item.product.currency)}</span>
                   )}
                 </div>
               </article>
             ))}
-            {Object.keys(totalsByCurrency).length > 0 && (
+            {subtotal > 0 && (
               <div className="cart-totals" aria-label="Bag subtotal">
                 <span>Subtotal</span>
-                <div>
-                  {Object.entries(totalsByCurrency).map(([currency, total]) => (
-                    <strong key={currency}>{formatPrice(total, currency)}</strong>
-                  ))}
-                </div>
+                <strong>{formatPKR(subtotal)}</strong>
               </div>
             )}
-            <p className="cart-note">Thoughtful objects, chosen to stay.</p>
+            <p className="cart-note">Prices shown in Pakistani rupees.</p>
           </div>
         )}
       </aside>

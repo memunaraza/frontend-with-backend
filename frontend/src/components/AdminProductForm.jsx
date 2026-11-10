@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../services/api.js'
+import productCategories from '../data/product-categories.js'
 
 export default function AdminProductForm({ onCreate, busy, error, success }) {
   const [brands, setBrands] = useState([])
@@ -42,6 +43,14 @@ export default function AdminProductForm({ onCreate, busy, error, success }) {
           </select>
         </label>
         <label>
+          Collection
+          <select name="category" defaultValue="home" required>
+            {productCategories.map((category) => (
+              <option key={category.value} value={category.value}>{category.label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
           Product name
           <input name="name" required maxLength="120" />
         </label>
@@ -49,19 +58,11 @@ export default function AdminProductForm({ onCreate, busy, error, success }) {
           Description
           <textarea name="desc" rows="3" required maxLength="500" />
         </label>
-        <div className="product-price-fields">
-          <label>
-            Price
-            <input name="price" type="number" min="0" step="0.01" required />
-          </label>
-          <label>
-            Currency
-            <select name="currency" defaultValue="USD">
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-            </select>
-          </label>
-        </div>
+        <label>
+          Price (PKR)
+          <input name="price" type="number" min="0" step="1" required />
+          <input name="currency" type="hidden" value="PKR" />
+        </label>
         <label>
           Product image file
           <input name="image" type="file" accept="image/*" />

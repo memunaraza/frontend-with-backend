@@ -3,19 +3,24 @@ import userModel from "../models/users.model.js";
 import brandModel from "../models/brands.model.js";
 import mongoose from "mongoose";
 import uploadFile from "../../services/storage.service.js";
+import productCategories from "../constants/product-categories.js";
 
 async function createProduct(req, res) {
     const name = typeof req.body.name === "string" ? req.body.name.trim() : ""
     const desc = typeof req.body.desc === "string" ? req.body.desc.trim() : ""
     const price = Number(req.body.price)
-    const currency = req.body.currency || "USD"
+    const currency = req.body.currency || "PKR"
     const brandId = req.body.brandId
+    const category = req.body.category || "home"
 
     if (!name || name.length > 120 || !desc || desc.length > 500) {
         return res.status(400).json({ message: "Product name and description are required and must fit the stated limits." })
     }
-    if (!Number.isFinite(price) || price < 0 || !["USD", "EUR"].includes(currency)) {
-        return res.status(400).json({ message: "Enter a valid non-negative price and supported currency." })
+    if (!Number.isFinite(price) || price < 0 || currency !== "PKR") {
+        return res.status(400).json({ message: "Enter a valid non-negative price in PKR." })
+    }
+    if (!productCategories.includes(category)) {
+        return res.status(400).json({ message: "Choose a valid product collection." })
     }
     if (brandId && !mongoose.isValidObjectId(brandId)) {
         return res.status(400).json({ message: "Invalid brand." })
@@ -47,6 +52,7 @@ async function createProduct(req, res) {
         image,
         name,
         desc,
+        category,
         brand: brand?._id,
         price,
         currency,
