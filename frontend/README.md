@@ -12,6 +12,8 @@ npm run dev
 
 Vite proxies `/api` requests to `http://localhost:3000`. To use another API origin, set `VITE_API_BASE_URL` in a frontend `.env` file.
 
+For direct cross-origin API requests, configure the backend's `CORS_ORIGINS` environment variable as a comma-separated list of allowed frontend origins (for example, `http://localhost:5173`). It defaults to `http://localhost:5173` and allows credentialed requests for the authentication cookie.
+
 ## Connected API routes
 
 - `GET /api/product` — load the collection

@@ -6,7 +6,17 @@ import brandRoutes from "./routes/brand.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 const app = express();
+const allowedOrigins = (process.env.CORS_ORIGINS ?? "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
