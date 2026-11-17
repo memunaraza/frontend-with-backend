@@ -9,6 +9,7 @@ import ProductCard from './components/ProductCard.jsx'
 import ProductDetail from './components/ProductDetail.jsx'
 import SiteHeader from './components/SiteHeader.jsx'
 import productCategories from './data/product-categories.js'
+import { formatPKR } from './utils/currency.js'
 import {
   AboutPage,
   AccountPage,
@@ -261,21 +262,40 @@ export default function App() {
 
   function renderHome() {
     const featuredProduct = products.find((product) => product.category === 'furniture') || products[0]
+    const featuredCategory = productCategories.find((category) => category.value === featuredProduct?.category)?.label
     return (
       <>
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow"><span className="eyebrow-line" /> Your next great find starts here</p>
-            <h1>Shop smart.<br /><em>Live better.</em></h1>
-            <p className="hero-description">Discover everyday favorites from thoughtful brands, with clear prices in Pakistani rupees.</p>
-            <button className="button button-light" type="button" onClick={() => navigate('/shop')}>Start shopping <span aria-hidden="true">↗</span></button>
-            <span className="hero-footnote">Find it. Love it. Make it yours.</span>
+            <p className="eyebrow"><span className="eyebrow-line" /> Good things, chosen with care</p>
+            <h1>Find the good.<br /><em>Keep it close.</em></h1>
+            <p className="hero-description">Discover thoughtful pieces for home, style, and all the moments in between—curated from brands worth knowing.</p>
+            <button className="button button-light hero-cta" type="button" onClick={() => navigate('/shop')}>Explore the collection <span aria-hidden="true">↗</span></button>
+            <span className="hero-footnote">A little more considered. A lot more you.</span>
           </div>
           <div className="hero-art">
-            {featuredProduct && <img src={featuredProduct.image} alt={featuredProduct.imageAlt || featuredProduct.name} />}
-            <div className="hero-art-label"><span>FEATURED FIND</span><strong>{featuredProduct?.name || 'Thoughtful finds for every day'}</strong></div>
+            {featuredProduct ? (
+              <button
+                className="hero-image-button"
+                type="button"
+                onClick={() => navigate(`/product/${encodeURIComponent(featuredProduct._id)}`)}
+                aria-label={`View ${featuredProduct.name}`}
+              >
+                <img src={featuredProduct.image} alt={featuredProduct.imageAlt || featuredProduct.name} />
+              </button>
+            ) : <div className="hero-image-placeholder" aria-hidden="true" />}
+            <div className="hero-art-label">
+              <div className="hero-art-kicker"><span>THE FORMA EDIT</span>{featuredCategory && <span>{featuredCategory}</span>}</div>
+              <div className="hero-art-details">
+                <div>
+                  <strong>{featuredProduct?.name || 'Thoughtful finds for every day'}</strong>
+                  {featuredProduct?.brand?.name && <span>{featuredProduct.brand.name}</span>}
+                </div>
+                {featuredProduct && <b>{formatPKR(featuredProduct.price, featuredProduct.currency)}</b>}
+              </div>
+            </div>
           </div>
-          <div className="hero-bottom"><span>Better finds, all in one place.</span><span>Prices shown in PKR <span aria-hidden="true">↗</span></span></div>
+          <div className="hero-bottom"><span>Thoughtful finds for everyday living.</span><span>Clear prices in PKR <span aria-hidden="true">↗</span></span></div>
         </section>
 
         <section className="store-promises" aria-label="What makes forma different">

@@ -4,7 +4,15 @@ A component-based storefront frontend for the Express API in `../backend`.
 
 ## Run locally
 
-Start the backend on port `3000`, then run the frontend:
+From `backend`, start the API on port `3000`:
+
+```sh
+npm start
+```
+
+On startup, if the connected database has no products, the backend creates the configured administrator (if needed) and seeds the curated brands and products before serving requests. Configure `MONGODB_URI`, `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `backend/.env` for local development or as environment variables in deployment. Existing catalogs with products are left unchanged.
+
+Then, from `frontend`, run:
 
 ```sh
 npm run dev
