@@ -6,10 +6,11 @@ import { getJwtSecret } from "../config/environment.js"
 function setAuthCookie(res, token) {
     res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/"
-    })
+        sameSite: "none",
+        secure: true,
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 }
 
 function toPublicUser(user) {
@@ -90,7 +91,12 @@ async function getCurrentUser(req, res) {
     try {
         const user = await userModel.findById(req.user.id).select("username email role")
         if (!user) {
-            res.clearCookie("token", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" })
+            res.clearCookie("token", {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true,
+                path: "/"
+            });
             return res.status(401).json({ message: "Your session has expired. Please sign in again." })
         }
         return res.status(200).json({ user: toPublicUser(user) })
@@ -101,8 +107,16 @@ async function getCurrentUser(req, res) {
 }
 
 function logoutUser(_req, res) {
-    res.clearCookie("token", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" })
-    return res.status(200).json({ message: "Signed out successfully." })
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        path: "/"
+    });
+
+    return res.status(200).json({
+        message: "Signed out successfully."
+    });
 }
 
 export { registerUser, loginUser, getCurrentUser, logoutUser }
