@@ -7,6 +7,7 @@ import orderRoutes from "./routes/order.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import connectDB from "./db/db.js";
 const app = express();
 const allowedOrigins = (
   process.env.CORS_ORIGINS ?? "http://localhost:5173"
@@ -21,6 +22,15 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use("/api/auth", authRoutes)
 app.use("/api/product",productRoutes )
